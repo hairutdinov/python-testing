@@ -6,7 +6,7 @@ from blog import Blog
 
 class TestApp(TestCase):
     def test_menu_calls_print_blogs(self):
-        with patch('blog.app.print_blogs') as mocked_print_blogs:
+        with patch('app.print_blogs') as mocked_print_blogs:
             with patch('builtins.input', return_value='q'):
                 app.menu()
                 mocked_print_blogs.assert_called()
