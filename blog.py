@@ -14,4 +14,5 @@ class Blog:
         pass
 
     def __repr__(self) -> str:
-        return ''
+        posts_count = len(self.posts)
+        return '{} by {} ({} post{})'.format(self.title, self.author, posts_count, ('s' if posts_count != 1 else ''))
