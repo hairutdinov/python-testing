@@ -1,11 +1,11 @@
 from post import Post
-
+from typing import List
 
 class Blog:
     def __init__(self, title: str, author: str):
         self.title = title
         self.author = author
-        self.posts = []
+        self.posts: List[Post] = []
 
     def create_post(self, title, content):
         self.posts.append(Post(title, content))
