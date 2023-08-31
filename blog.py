@@ -8,10 +8,14 @@ class Blog:
         self.posts = []
 
     def create_post(self, title, content):
-        pass
+        self.posts.append(Post(title, content))
 
-    def json(self):
-        pass
+    def json(self) -> dict:
+        return {
+            'title': self.title,
+            'author': self.author,
+            'posts': [p.json() for p in self.posts],
+        }
 
     def __repr__(self) -> str:
         posts_count = len(self.posts)
