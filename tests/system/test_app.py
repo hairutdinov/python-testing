@@ -69,3 +69,13 @@ Test Content
 '''
             mocked_print.assert_called_with(expected_print)
 
+    def test_ask_create_post(self):
+        b = Blog('Test', 'Test Author')
+        app.blogs[b.title] = b
+
+        with patch('builtins.input') as mocked_input:
+            mocked_input.side_effect = ('Test', 'Test Post', 'Test Content')
+            app.ask_create_post()
+
+            self.assertEqual('Test Post', app.blogs['Test'].posts[0].title)
+            self.assertEqual('Test Content', app.blogs['Test'].posts[0].content)
