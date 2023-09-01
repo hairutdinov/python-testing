@@ -6,11 +6,15 @@ from post import Post
 
 
 class TestApp(TestCase):
+    def setUp(self) -> None:
+        blog = Blog('Test', 'Test Author')
+        app.blogs[blog.title] = blog
+
     def test_menu_calls_create_blog(self):
         with patch('builtins.input') as mocked_input:
-            mocked_input.side_effect = ('c', 'Test Title', 'Test Author', 'q')
+            mocked_input.side_effect = ('c', 'Test', 'Test Author', 'q')
             app.menu()
-            self.assertIsNotNone(app.blogs.get('Test Title'))
+            self.assertIsNotNone(app.blogs.get('Test'))
 
     # or check if ask_create_blog() function was called
     # def test_menu_calls_create_blog(self):
@@ -53,10 +57,8 @@ class TestApp(TestCase):
     #         mocked_print.assert_called_with('- Test Blog by Test Author (0 posts)')
     @patch('builtins.print')
     def test_print_blogs(self, mocked_print):
-        b = Blog('Test Blog', 'Test Author')
-        app.blogs = {'Test': b}
         app.print_blogs()
-        mocked_print.assert_called_with('- Test Blog by Test Author (0 posts)')
+        mocked_print.assert_called_with('- Test by Test Author (0 posts)')
 
     def test_ask_create_blog(self):
         with patch('builtins.input') as mocked_input:
@@ -66,16 +68,14 @@ class TestApp(TestCase):
             self.assertIsNotNone(app.blogs.get('Test'))
 
     def test_ask_read_blog(self):
-        b = Blog('Test', 'Test Author')
-        app.blogs[b.title] = b
-
+        b = app.blogs['Test']
         with patch('builtins.input', return_value='Test') as mocked_input:
             with patch('app.print_posts') as mocked_print_posts:
                 app.ask_read_blog()
                 mocked_print_posts.assert_called_with(b)
 
     def test_print_posts(self):
-        b = Blog('Test', 'Test Author')
+        b = app.blogs['Test']
         b.create_post('Test Post', 'Test Content')
         app.blogs[b.title] = b
 
@@ -97,9 +97,6 @@ Test Content
             mocked_print.assert_called_with(expected_print)
 
     def test_ask_create_post(self):
-        b = Blog('Test', 'Test Author')
-        app.blogs[b.title] = b
-
         with patch('builtins.input') as mocked_input:
             mocked_input.side_effect = ('Test', 'Test Post', 'Test Content')
             app.ask_create_post()
